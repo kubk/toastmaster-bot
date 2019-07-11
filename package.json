@@ -1,0 +1,21 @@
+{
+  "name": "toastmaster-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start:local": "npx pm2 stop all && npx pm2 start src/index.js && npx pm2 logs",
+    "start:prod": "npx pm2 stop all && npx pm2 start src/index.js",
+    "stop": "npx pm2 stop all"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.0.0",
+    "node-html-parser": "^1.1.16",
+    "pm2": "^3.5.1",
+    "yandex-translate": "^2.1.3"
+  }
+}
