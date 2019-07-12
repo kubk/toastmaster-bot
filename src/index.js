@@ -1,17 +1,17 @@
 require('dotenv').config();
 
 const Discord = require('discord.js');
-const YandexTranslator = require('./yandex-translator');
 const ToastmasterClient = require('./toastmaster-client');
+const GoogleTranslator = require('./google-translator');
 
 const discordSecret = process.env.DISCORD_SECRET;
-const yandexApiKey = process.env.YANDEX_API_KEY;
+const googleProjectId = process.env.GOOGLE_PROJECT_ID;
 
-const yandexTranslator = new YandexTranslator(yandexApiKey);
+const googleTranslator = new GoogleTranslator(googleProjectId);
 const toastmasterClient = new ToastmasterClient();
 const discord = new Discord.Client();
 
-const greeting = 'Привет, я могу брать темы для обсуждения с сайта ratespeeches.com и прогонять их через Яндекс-переводчик.';
+const greeting = 'Привет, я могу брать темы для обсуждения с сайта ratespeeches.com и прогонять их через Гугл-переводчик.';
 const helpMessage = `Доступные команды:\n\`roll\` или \`ролл\` - Запросить список случайных тем\n\`help\` - Помощь`;
 
 discord.on('ready', () => {
@@ -30,7 +30,7 @@ discord.on('message', async message => {
     await message.channel.startTyping();
     const topics = await toastmasterClient.getRandomTopics();
     const messages = await Promise.all(topics.map(async topic => {
-      const translation = await yandexTranslator.translate(topic);
+      const translation = await googleTranslator.translate(topic);
       return `${topic} | ${translation}`;
     }));
     await message.reply(messages.join('\n'));
