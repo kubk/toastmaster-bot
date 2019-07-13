@@ -1,8 +1,12 @@
-const axios = require('axios');
-const HtmlParser = require('node-html-parser');
-const querystring = require('querystring');
+import { AxiosInstance } from 'axios';
+import axios from 'axios';
+import * as HtmlParser from 'node-html-parser';
+import { HTMLElement } from 'node-html-parser';
+import * as querystring from 'querystring';
 
-class ToastmasterClient {
+export class RateSpeechesClient {
+  private http: AxiosInstance;
+
   constructor() {
     this.http = axios.create({
       headers: {
@@ -22,7 +26,7 @@ class ToastmasterClient {
     })
   }
 
-  async getRandomTopics() {
+  async getRandomTopics(): Promise<string[]> {
     const response = await this.http({
       method: 'POST',
       url: 'http://www.ratespeeches.com/t=Toastmaster-Table-Topics',
@@ -36,10 +40,11 @@ class ToastmasterClient {
     });
 
     const root = HtmlParser.parse(response.data);
+    if (!(root instanceof HTMLElement)) {
+      return [];
+    }
     const topics = root.querySelectorAll('.tabTopicItem .tdTopicItem');
 
     return topics.map(topic => topic.rawText);
   }
 }
-
-module.exports = ToastmasterClient;
