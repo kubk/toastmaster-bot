@@ -1,6 +1,7 @@
 import * as Discord from 'discord.js';
 import { RateSpeechesClient } from './rate-speeches-client';
 import { GoogleTranslator } from './google-translator';
+import { formatMessage } from "./format-message";
 
 require('dotenv').config();
 
@@ -33,9 +34,7 @@ discord.on('message', async (message: Discord.Message) => {
     const translations = await Promise.all(topics.map(topic => {
       return googleTranslator.translate(topic);
     }));
-    const messages = topics.reduce((string, topic, i) => {
-      return `${string}\n${topic} | ${translations[i]}`;
-    }, '');
+    const messages = formatMessage(topics, translations);
     await message.reply(messages);
     await message.channel.stopTyping();
   } else if (message.content) {
