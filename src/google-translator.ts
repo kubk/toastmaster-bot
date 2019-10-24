@@ -1,9 +1,10 @@
 const { TranslationServiceClient } = require('@google-cloud/translate').v3beta1;
 
 export class GoogleTranslator {
-  private translationClient = new TranslationServiceClient();
-
-  constructor(private projectId: string) {}
+  constructor(
+    private translationClient: typeof TranslationServiceClient,
+    private projectId: string
+  ) {}
 
   async translate(text: string): Promise<string> {
     const [response] = await this.translationClient.translateText({
@@ -11,8 +12,8 @@ export class GoogleTranslator {
       contents: [text],
       mimeType: 'text/plain',
       sourceLanguageCode: 'en-US',
-      targetLanguageCode: 'ru-RU',
+      targetLanguageCode: 'ru-RU'
     });
-    return response.translations.length ? response.translations[0].translatedText : '';
+    return response.translations[0].translatedText ?? '';
   }
 }

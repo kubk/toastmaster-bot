@@ -1,14 +1,22 @@
 import { AxiosInstance } from 'axios';
-import axios from 'axios';
 import * as HtmlParser from 'node-html-parser';
 import { HTMLElement } from 'node-html-parser';
 import * as querystring from 'querystring';
 
 export class RateSpeechesClient {
-  private http: AxiosInstance;
+  constructor(private http: AxiosInstance) {}
 
-  constructor() {
-    this.http = axios.create({
+  async getRandomTopics(): Promise<string[]> {
+    const response = await this.http({
+      method: 'POST',
+      url: 'http://www.ratespeeches.com/t=Toastmaster-Table-Topics',
+      data: querystring.stringify({
+        'generate_cnt': '5',
+        'topic_generate': 'Generate+Toastmaster+Table+Topics',
+        'context': 'TopicGenerator',
+        'title_index': '56',
+        'display_patterns': 'no',
+      }),
       headers: {
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
@@ -23,20 +31,6 @@ export class RateSpeechesClient {
         'Accept-Language': 'en-US,en;q=0.9,uk;q=0.8,ru;q=0.7',
         'Cookie': `__utmz=253024394.1561920309.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utma=253024394.461330039.1561920309.1561922868.1562004024.3; 6c98c422b8d7b4ca3ec4af6c50ce0c35=t0f64pkijniquns9bt7nfgojm2`,
       }
-    })
-  }
-
-  async getRandomTopics(): Promise<string[]> {
-    const response = await this.http({
-      method: 'POST',
-      url: 'http://www.ratespeeches.com/t=Toastmaster-Table-Topics',
-      data: querystring.stringify({
-        'generate_cnt': '5',
-        'topic_generate': 'Generate+Toastmaster+Table+Topics',
-        'context': 'TopicGenerator',
-        'title_index': '56',
-        'display_patterns': 'no',
-      }),
     });
 
     const root = HtmlParser.parse(response.data);
